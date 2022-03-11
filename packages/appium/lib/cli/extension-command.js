@@ -16,7 +16,7 @@ class NoUpdatesAvailableError extends Error {}
 /**
  * @template {ExtensionType} ExtType
  */
-export default class ExtensionCommand {
+class ExtensionCommand {
   /**
    * This is the `DriverConfig` or `PluginConfig`, depending on `ExtType`.
    * @type {ExtensionConfig<ExtType>}
@@ -91,7 +91,12 @@ export default class ExtensionCommand {
         }
       }
       return acc;
-    }, /** @type {ExtensionListData} */({}));
+    },
+    /**
+     * This accumulator contains either {@linkcode UninstalledExtensionLIstData} _or_
+     * {@linkcode InstalledExtensionListData} without upgrade information (which is added by the below code block)
+     * @type {Record<string,Partial<InstalledExtensionListData>|UninstalledExtensionListData>}
+     */({}));
 
     // if we want to show whether updates are available, put that behind a spinner
     await spinWith(this.isJsonOutput, lsMsg, async () => {
@@ -111,16 +116,18 @@ export default class ExtensionCommand {
       }
     });
 
+    const listData = /** @type {ExtensionListData} */(exts);
+
     // if we're just getting the data, short circuit return here since we don't need to do any
     // formatting logic
     if (this.isJsonOutput) {
-      return exts;
+      return listData;
     }
 
     for (const [
       name,
       data
-    ] of _.toPairs(exts)) {
+    ] of _.toPairs(listData)) {
       let installTxt = ' [not installed]'.grey;
       let updateTxt = '';
       let upToDateTxt = '';
@@ -157,7 +164,7 @@ export default class ExtensionCommand {
       console.log(`- ${name.yellow}${installTxt}${updateTxt}${upToDateTxt}${unsafeUpdateTxt}`);
     }
 
-    return exts;
+    return listData;
   }
 
   /**
@@ -519,6 +526,9 @@ export default class ExtensionCommand {
   }
 }
 
+export default ExtensionCommand;
+export {ExtensionCommand};
+
 /**
  * @template {ExtensionType} ExtType
  * @typedef {import('../extension/extension-config').ExtensionConfig<ExtType>} ExtensionConfig
@@ -537,9 +547,9 @@ export default class ExtensionCommand {
  *
  * @typedef ExtensionMetadata
  * @property {boolean} installed - If `true`, the extension is installed
- * @property {string|null} [updateVersion] - If the extension is installed, the version it can be updated to
- * @property {string|null} [unsafeUpdateVersion] - Same as above, but a major version bump
- * @property {boolean} [upToDate] - If the extension is installed and the latest
+ * @property {string?} updateVersion - If the extension is installed, the version it can be updated to
+ * @property {string?} unsafeUpdateVersion - Same as above, but a major version bump
+ * @property {boolean} upToDate - If the extension is installed and the latest
  */
 
 /**
@@ -557,8 +567,18 @@ export default class ExtensionCommand {
  */
 
 /**
+ * @typedef UninstalledExtensionListData
+ * @property {string} pkgName
+ * @property {false} installed
+ */
+
+/**
+ * @typedef {import('../extension/manifest').InternalData & ExtensionMetadata} InstalledExtensionListData
+ */
+
+/**
  * Return value of {@linkcode ExtensionCommand.list}.
- * @typedef {Record<string, (import('../extension/manifest').InternalData & ExtensionMetadata) | { pkgName: string, installed: false }>} ExtensionListData
+ * @typedef {Record<string,InstalledExtensionListData|UninstalledExtensionListData>} ExtensionListData
  */
 
 /**

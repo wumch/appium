@@ -135,8 +135,9 @@ export class DriverConfig extends ExtensionConfig {
 
    /**
    * Given capabilities, find a matching driver within the config. Load its class and return it along with version and driver name.
+   * @template Driver
    * @param { { automationName: string, platformName: string } } caps
-   * @returns { { driver: import('./manifest').DriverClass, version: string, driverName: string } }
+   * @returns {MatchedDriver<Driver>}
    */
    findMatchingDriver ({automationName, platformName}) {
      if (!_.isString(platformName)) {
@@ -228,3 +229,11 @@ export class DriverConfig extends ExtensionConfig {
  * @typedef {import('./extension-config').ExtName<T>} ExtName
  */
 
+
+/**
+ * @template {import('@appium/base-driver').BaseDriver} Driver
+ * @typedef MatchedDriver
+ * @property {import('./manifest').DriverClass<Driver>} driver
+ * @property {string} version
+ * @property {string} driverName
+ */

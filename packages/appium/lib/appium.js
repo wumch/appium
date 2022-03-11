@@ -1,6 +1,8 @@
 import _ from 'lodash';
 import { getBuildInfo, updateBuildInfo, APPIUM_VER } from './config';
+// @ts-ignore
 import { BaseDriver, errors, isSessionCommand,
+         // @ts-ignore
          CREATE_SESSION_COMMAND, DELETE_SESSION_COMMAND, GET_STATUS_COMMAND
 } from '@appium/base-driver';
 import AsyncLock from 'async-lock';
@@ -51,7 +53,7 @@ class AppiumDriver extends BaseDriver {
     // It is not recommended to access this property directly from the outside
     this.pendingDrivers = {};
 
-    /** @type {PluginExtensionClass[]} */
+    /** @type {import('./extension/manifest').PluginClass[]} */
     this.pluginClasses = []; // list of which plugins are active
     this.sessionPlugins = {}; // map of sessions to actual plugin instances per session
     this.sessionlessPlugins = []; // some commands are sessionless, so we need a set of plugins for them
@@ -62,7 +64,6 @@ class AppiumDriver extends BaseDriver {
 
   /**
    * Retrieves logger instance for the current umbrella driver instance
-   * @override
    */
   get log () {
     if (!this._log) {
@@ -128,7 +129,7 @@ class AppiumDriver extends BaseDriver {
    * If the extension has provided a schema, validation has already happened.
    *
    * Any arg which is equal to its default value will not be assigned to the extension.
-   * @param {import('./manifest').ExtensionType} extType 'driver' or 'plugin'
+   * @param {import('./extension/manifest').ExtensionType} extType 'driver' or 'plugin'
    * @param {string} extName the name of the extension
    * @param {Object} extInstance the driver or plugin instance
    */
@@ -150,7 +151,6 @@ class AppiumDriver extends BaseDriver {
    * @param {Object} jsonwpCaps JSONWP formatted desired capabilities
    * @param {Object} reqCaps Required capabilities (JSONWP standard)
    * @param {Object} w3cCapabilities W3C capabilities
-   * @return {Array} Unique session ID and capabilities
    */
   async createSession (jsonwpCaps, reqCaps, w3cCapabilities) {
     const defaultCapabilities = _.cloneDeep(this.args.defaultCapabilities);
@@ -179,8 +179,9 @@ class AppiumDriver extends BaseDriver {
         defaultCapabilities
       );
 
-      const {desiredCaps, processedJsonwpCapabilities, processedW3CCapabilities, error} = parsedCaps;
+      const {desiredCaps, processedJsonwpCapabilities, processedW3CCapabilities} = parsedCaps;
       protocol = parsedCaps.protocol;
+      const error = /** @type {import('./utils').InvalidCaps} */(parsedCaps).error;
 
       // If the parsing of the caps produced an error, throw it in here
       if (error) {
@@ -191,14 +192,14 @@ class AppiumDriver extends BaseDriver {
         driver: InnerDriver,
         version: driverVersion,
         driverName
-      } = this.driverConfig.findMatchingDriver(desiredCaps);
+      } = /** @type {import('./extension/driver-config').DriverConfig} */(this.driverConfig).findMatchingDriver(/** @type {import('./utils').DesiredCaps} */(desiredCaps));
       this.printNewSessionAnnouncement(InnerDriver.name, driverVersion, InnerDriver.baseVersion);
 
       if (this.args.sessionOverride) {
         await this.deleteAllSessions();
       }
 
-      let runningDriversData, otherPendingDriversData;
+      let runningDriversData, otherPendingDriversData = [];
 
       const driverInstance = new InnerDriver(this.args, true);
 
@@ -344,6 +345,9 @@ class AppiumDriver extends BaseDriver {
     return data;
   }
 
+  /**
+   * @param {string} sessionId
+   */
   async deleteSession (sessionId) {
     let protocol;
     try {

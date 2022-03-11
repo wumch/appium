@@ -1,19 +1,14 @@
 {
-  "compilerOptions": {
-    "strictNullChecks": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "module": "es2015",
-    "target": "es2015",
-    "noEmit": true,
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "types": ["node", "mocha", "chai", "sinon-chai", "chai-as-promised"]
-  },
-  "include": [
-    "packages/*/**/*.d.ts",
-    "packages/*/**/*.js",
-    "*.js"
+  "exclude": [
+    "packages/**/test/**",
+    "packages/**/build/**",
   ],
-  "exclude": ["**/node_modules/**", "**/build/**"]
+  "compilerOptions": {
+    "baseUrl": "./packages",
+    "paths": {
+      "@appium/support": ["support"],
+    }
+  },
+  "files": [],
+  "references": [{"path": "packages/appium"}, {"path": "packages/support"}],
 }

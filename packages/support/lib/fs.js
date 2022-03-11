@@ -11,7 +11,7 @@ import ncp from 'ncp';
 import path from 'path';
 import pkgDir from 'pkg-dir';
 import readPkg from 'read-pkg';
-import rimraf from 'rimraf';
+import rimrafIdx from 'rimraf';
 import sanitize from 'sanitize-filename';
 import which from 'which';
 import log from './logger';
@@ -48,13 +48,13 @@ const fs = {
    * Remove a directory and all its contents, recursively
    * @todo Replace with `rm()` from `fs.promises` when Node.js v12 support is dropped.
    */
-  rimraf: /** @type {(dirpath: string, opts?: rimraf.Options) => Promise<void>} */(B.promisify(rimraf)),
+  rimraf: /** @type {(dirpath: string, opts?: import('rimraf').Options) => Promise<void>} */(B.promisify(rimrafIdx)),
 
   /**
-   * Alias of {@linkcode rimraf.sync}
+   * Alias of {@linkcode rimrafIdx.sync}
    * @todo Replace with `rmSync()` from `fs` when Node.js v12 support is dropped.
    */
-  rimrafSync: rimraf.sync,
+  rimrafSync: rimrafIdx.sync,
 
   /**
    * Like Node.js' `fsPromises.mkdir()`, but will _not_ reject if the directory already exists.
@@ -100,7 +100,7 @@ const fs = {
   /**
    * Move a file
    */
-  mv: /** @type {(from: string, to: string, opts?: mv.Options) => B<void>} */(B.promisify(mv)),
+  mv: /** @type {(from: string, to: string, opts?: import('mv').Options) => B<void>} */(B.promisify(mv)),
 
   /**
    * Find path to an executable in system `PATH`
@@ -112,7 +112,7 @@ const fs = {
    * Given a glob pattern, resolve with list of files matching that pattern
    * @see https://github.com/isaacs/node-glob
    */
-  glob: /** @type {(pattern: string, opts?: glob.IOptions) => B<string[]>} */(B.promisify(glob)),
+  glob: /** @type {(pattern: string, opts?: import('glob').IOptions) => B<string[]>} */(B.promisify(glob)),
 
   /**
    * Sanitize a filename
@@ -280,6 +280,7 @@ const fs = {
   /**
    * Warning: this is a promisified {@linkcode open fs.open}.
    * It resolves w/a file descriptor instead of a {@linkcode fsPromises.FileHandle FileHandle} object, as {@linkcode fsPromises.open} does. Use {@linkcode fs.openFile} if you want a `FileHandle`.
+   * @type {(path: import('fs').PathLike, flags: import('fs').OpenMode, mode?: import('fs').Mode) => Promise<number>}
    */
   open: B.promisify(open),
   openFile: fsPromises.open,
