@@ -48,6 +48,10 @@ function _getLogger () {
   return [logger, usingGlobalLog];
 }
 
+/**
+ * @param {Prefix} prefix
+ * @param {boolean} [logTimestamp]
+ */
 function getActualPrefix (prefix, logTimestamp = false) {
   let actualPrefix = _.isFunction(prefix) ? prefix() : prefix;
   if (logTimestamp) {
@@ -58,7 +62,7 @@ function getActualPrefix (prefix, logTimestamp = false) {
 
 /**
  *
- * @param {string?} prefix
+ * @param {Prefix} [prefix]
  * @returns {AppiumLogger}
  */
 function getLogger (prefix = null) {
@@ -171,4 +175,14 @@ export default log;
  * @property {(...args: any[]) => void} verbose
  * @property {(...args: any[]) => void} silly
  * @property {(...args: any[]) => void} http
+ */
+
+
+/**
+ * @callback PrefixCallback
+ * @returns {string}
+ */
+
+/**
+ * @typedef {PrefixCallback|string?} Prefix
  */

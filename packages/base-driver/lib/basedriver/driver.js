@@ -1,5 +1,10 @@
+/// <reference path="./idriver.d.ts"/>
+/// <reference path="./basedriver.d.ts"/>
+/* eslint-disable no-unused-vars */
+// @ts-check
+
 import {
-  Protocol, errors, determineProtocol, DELETE_SESSION_COMMAND,
+  errors, determineProtocol, DELETE_SESSION_COMMAND,
 } from '../protocol';
 import { fs, logger, node } from '@appium/support';
 import { PROTOCOLS, DEFAULT_BASE_PATH } from '../constants';
@@ -29,8 +34,7 @@ const EVENT_SESSION_QUIT_START = 'quitSessionRequested';
 const EVENT_SESSION_QUIT_DONE = 'quitSessionFinished';
 const ON_UNEXPECTED_SHUTDOWN_EVENT = 'onUnexpectedShutdown';
 
-
-class BaseDriver extends Protocol {
+class BaseDriver {
 
   /**
    * Make the basedriver version available so for any driver which inherits from this package, we
@@ -38,9 +42,12 @@ class BaseDriver extends Protocol {
    */
   static baseVersion = BASEDRIVER_VER;
 
-  constructor (opts = {}, shouldValidateCaps = true) {
-    super();
-
+  /**
+   *
+   * @param {AppiumDriver.Method} [opts]
+   * @param {boolean} [shouldValidateCaps]
+   */
+  constructor (opts = /** @type {import('@appium/base-driver').DriverOpts} */({}), shouldValidateCaps = true) {
     // setup state
     this.sessionId = null;
     this.opts = opts;
@@ -87,7 +94,7 @@ class BaseDriver extends Protocol {
     // we set it to an empty DeviceSettings instance here to make sure that the
     // default settings are applied even if an extending driver doesn't utilize
     // the settings functionality itself
-    this.settings = new DeviceSettings({}, _.noop);
+    this.settings = new DeviceSettings();
 
     // keeping track of initial opts
     this.initialOpts = _.cloneDeep(this.opts);
@@ -96,14 +103,15 @@ class BaseDriver extends Protocol {
     this.managedDrivers = [];
 
     // store event timings
+    /**
+     * @type {import('@appium/base-driver').EventHistory}
+     */
     this._eventHistory = {
       commands: [] // commands get a special place
     };
 
     // used to handle driver events
     this.eventEmitter = new EventEmitter();
-
-    this.protocol = null;
   }
 
   get log () {
@@ -122,7 +130,7 @@ class BaseDriver extends Protocol {
    * when the driver is shut down unexpectedly. Multiple calls to this method
    * will cause the handler to be executed mutiple times
    *
-   * @param {Function} handler The code to be executed on unexpected shutdown.
+   * @param {(...args: any[]) => void} handler The code to be executed on unexpected shutdown.
    * The function may accept one argument, which is the actual error instance, which
    * caused the driver to shut down.
    */
@@ -316,6 +324,11 @@ class BaseDriver extends Protocol {
   // execution with timeout logic, checking that we have a valid session,
   // and ensuring that we execute commands one at a time. This method is called
   // by MJSONWP's express router.
+  /**
+   * @param {string} cmd
+   * @param  {...any[]} args
+   * @returns {Promise<any>}
+   */
   async executeCommand (cmd, ...args) {
     // get start time for this command, and log in special cases
     let startTime = Date.now();
@@ -439,7 +452,12 @@ class BaseDriver extends Protocol {
     return false;
   }
 
-  getProxyAvoidList (/* sessionId */) {
+  /**
+   *
+   * @param {string} sessionId
+   * @returns {[string, RegExp][]}
+   */
+  getProxyAvoidList (sessionId) {
     return [];
   }
 
@@ -454,13 +472,13 @@ class BaseDriver extends Protocol {
    * @param {string} sessionId - the current sessionId (in case the driver runs
    * multiple session ids and requires it). This is not used in this method but
    * should be made available to overridden methods.
-   * @param {string} method - HTTP method of the route
+   * @param {import('@appium/base-driver').HTTPMethod} method - HTTP method of the route
    * @param {string} url - url of the route
-   * @param {?*} body - webdriver request body
+   * @param {any} [body] - webdriver request body
    *
    * @returns {boolean} - whether the route should be avoided
    */
-  proxyRouteIsAvoided (sessionId, method, url/*, body*/) {
+  proxyRouteIsAvoided (sessionId, method, url, body) {
     for (let avoidSchema of this.getProxyAvoidList(sessionId)) {
       if (!_.isArray(avoidSchema) || avoidSchema.length !== 2) {
         throw new Error('Proxy avoidance must be a list of pairs');

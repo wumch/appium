@@ -6,7 +6,7 @@
 import { init as logsinkInit } from './logsink'; // this import needs to come first since it sets up global npmlog
 import logger from './logger'; // logger needs to remain second
 // @ts-ignore
-import { routeConfiguringFunction as makeRouter, server as baseServer } from '@appium/base-driver';
+import { routeConfiguringFunction as makeRouter, server as baseServer } from '@appium/base-driver/old';
 import { logger as logFactory, util, env } from '@appium/support';
 import { asyncify } from 'asyncbox';
 import _ from 'lodash';

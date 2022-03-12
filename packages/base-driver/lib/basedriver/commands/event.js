@@ -16,21 +16,19 @@ commands.logCustomEvent = function (vendor, event) {
 /**
  * Get the event log
  *
- * @param {?string|Array<string>} type - the event type to filter with.
+ * @param {string|string[]} [type] - the event type to filter with.
  * It returns all events if the type is not provided or empty string/array.
- * @returns {object} - the event history log object
+ * @returns {import('@appium/base-driver').EventHistory|Record<string,number>} - the event history log object
  */
-commands.getLogEvents = function (type = null) {
+commands.getLogEvents = function (type) {
   if (_.isEmpty(type)) {
     return this._eventHistory;
   }
 
-  if (!_.isArray(type)) {
-    type = [type];
-  }
+  const typeList = _.castArray(type);
 
   return _.reduce(this._eventHistory, (acc, eventTimes, eventType) => {
-    if (type.includes(eventType)) {
+    if (typeList.includes(eventType)) {
       acc[eventType] = eventTimes;
     }
     return acc;

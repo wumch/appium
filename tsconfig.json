@@ -7,8 +7,10 @@
     "baseUrl": "./packages",
     "paths": {
       "@appium/support": ["support"],
+      "@appium/base-driver": ["base-driver"],
+      "appium": ["appium"]
     }
   },
   "files": [],
-  "references": [{"path": "packages/appium"}, {"path": "packages/support"}],
+  "references": [{"path": "packages/appium"}, {"path": "packages/support"}, {"path": "packages/base-driver"}],
 }

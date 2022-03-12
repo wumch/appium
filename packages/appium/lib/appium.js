@@ -1,8 +1,6 @@
 import _ from 'lodash';
 import { getBuildInfo, updateBuildInfo, APPIUM_VER } from './config';
-// @ts-ignore
 import { BaseDriver, errors, isSessionCommand,
-         // @ts-ignore
          CREATE_SESSION_COMMAND, DELETE_SESSION_COMMAND, GET_STATUS_COMMAND
 } from '@appium/base-driver';
 import AsyncLock from 'async-lock';
@@ -10,6 +8,9 @@ import { parseCapsForInnerDriver, pullSettings } from './utils';
 import { util, node, logger } from '@appium/support';
 import { getDefaultsForExtension } from './schema';
 
+/**
+ * @type {import('@appium/base-driver').Constraints}
+ */
 const desiredCapabilityConstraints = {
   automationName: {
     presence: true,

@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import logger from './logger';
 // @ts-ignore
-import { processCapabilities, PROTOCOLS } from '@appium/base-driver';
+import { processCapabilities, PROTOCOLS } from '@appium/base-driver/old';
 import { inspect as dump } from 'util';
 
 const W3C_APPIUM_PREFIX = 'appium';

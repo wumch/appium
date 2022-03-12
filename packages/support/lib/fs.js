@@ -334,3 +334,7 @@ export default fs;
  * @return {boolean} return true if you want to stop walking
 */
 
+/**
+ * @typedef {import('glob')} glob
+ * @typedef {import('mv')} mv
+ */

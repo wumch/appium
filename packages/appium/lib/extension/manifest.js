@@ -523,8 +523,7 @@ export class Manifest {
  * Main class/constructor of third-party driver
  *
  * Referenced by {@link CommonData.mainClass}
- * @template {import('@appium/base-driver').BaseDriver} Driver
- * @typedef { {driverName: string} & import('type-fest').Class<Driver> & ExtClassStaticMembers } DriverClass
+ * @typedef { {driverName: string} & import('type-fest').Class<import('@appium/base-driver').Driver> & ExtClassStaticMembers } DriverClass
  */
 
 /**

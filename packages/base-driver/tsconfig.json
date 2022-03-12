@@ -4,11 +4,10 @@
     "rootDir": ".",
     "outDir": "./build",
     "paths": {
-      "@appium/support": ["../support"],
-      "@appium/base-driver": ["../base-driver"]
+      "@appium/support": ["../support"]
     },
-    "checkJs": true
   },
+  "files": ["./lib/basedriver/idriver.d.ts", "./lib/basedriver/basedriver.d.ts"],
   "include": ["./lib/**/*.js"],
-  "references": [{"path": "../support"}, {"path": "../base-driver"}]
+  "references": [{"path": "../support"}]
 }
