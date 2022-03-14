@@ -864,7 +864,7 @@ function getResponseForJsonwpError (err) {
 }
 
 export {
-  ProtocolError, errors, isErrorType, isUnknownError,
+  errors, isErrorType, isUnknownError,
   errorFromMJSONWPStatusCode, errorFromW3CJsonCode,
   getResponseForW3CError, getResponseForJsonwpError,
 };

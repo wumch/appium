@@ -4,10 +4,10 @@
     "rootDir": ".",
     "outDir": "./build",
     "paths": {
-      "@appium/support": ["../support"]
+      "@appium/support": ["../support"],
+      "@appium/types": ["../types"],
     },
   },
-  "files": ["./lib/basedriver/idriver.d.ts", "./lib/basedriver/basedriver.d.ts"],
-  "include": ["./lib/**/*.js"],
+  "include": ["./lib/**/*", "./types/index.d.ts"],
   "references": [{"path": "../support"}]
 }

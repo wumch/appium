@@ -225,7 +225,7 @@ function processCapabilities (caps, constraints = {}, shouldValidateCaps = true)
     }
   }
 
-  return matchedCaps;
+  return matchedCaps ?? {};
 }
 
 /**
@@ -237,7 +237,7 @@ function processCapabilities (caps, constraints = {}, shouldValidateCaps = true)
  * user-constructed capabilities.
  *
  * @param {object} originalCaps - the capabilities to analyze and promote from 'options'
- * @return {object} - the capabilities with 'options' promoted if necessary
+ * @return {object!} - the capabilities with 'options' promoted if necessary
  */
 function promoteAppiumOptions (originalCaps) {
   const appiumOptions = originalCaps[APPIUM_OPTS_CAP];

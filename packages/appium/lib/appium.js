@@ -9,7 +9,7 @@ import { util, node, logger } from '@appium/support';
 import { getDefaultsForExtension } from './schema';
 
 /**
- * @type {import('@appium/base-driver').Constraints}
+ * @type {import('@appium/types').Constraints}
  */
 const desiredCapabilityConstraints = {
   automationName: {

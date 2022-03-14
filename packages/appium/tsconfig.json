@@ -5,7 +5,8 @@
     "outDir": "./build",
     "paths": {
       "@appium/support": ["../support"],
-      "@appium/base-driver": ["../base-driver"]
+      "@appium/base-driver": ["../base-driver"],
+      "@appium/types": ["../types"],
     },
     "checkJs": true
   },

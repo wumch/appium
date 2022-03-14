@@ -1,10 +1,7 @@
-const commands = {}, helpers = {}, extensions = {};
-
-
 // Override the following function for your own driver, and the rest is taken
 // care of!
 
-// helpers.findElOrEls = async function (strategy, selector, mult, context) {}
+// async (strategy, selector, mult, context) {}
 //   strategy: locator strategy
 //   selector: the actual selector for finding an element
 //   mult: multiple elements or just one?
@@ -13,39 +10,37 @@ const commands = {}, helpers = {}, extensions = {};
 // Returns an object which adheres to the way the JSON Wire Protocol represents elements:
 // { ELEMENT: # }    eg: { ELEMENT: 3 }  or { ELEMENT: 1.023 }
 
-helpers.findElOrElsWithProcessing = async function findElOrElsWithProcessing (strategy, selector, mult, context) {
-  this.validateLocatorStrategy(strategy);
-  try {
-    return await this.findElOrEls(strategy, selector, mult, context);
-  } catch (err) {
-    if (this.opts.printPageSourceOnFindFailure) {
-      const src = await this.getPageSource();
-      this.log.debug(`Error finding element${mult ? 's' : ''}: ${err.message}`);
-      this.log.debug(`Page source requested through 'printPageSourceOnFindFailure':`);
-      this.log.debug(src);
+export class FindCommands {
+  async findElOrElsWithProcessing (strategy, selector, mult, context) {
+    this.validateLocatorStrategy(strategy);
+    try {
+      return await this.findElOrEls(strategy, selector, mult, context);
+    } catch (err) {
+      if (this.opts.printPageSourceOnFindFailure) {
+        const src = await this.getPageSource();
+        this.log.debug(`Error finding element${mult ? 's' : ''}: ${err.message}`);
+        this.log.debug(`Page source requested through 'printPageSourceOnFindFailure':`);
+        this.log.debug(src);
+      }
+      // still want the error to occur
+      throw err;
     }
-    // still want the error to occur
-    throw err;
   }
-};
 
-commands.findElement = async function findElement (strategy, selector) {
-  return await this.findElOrElsWithProcessing(strategy, selector, false);
-};
+  async findElement (strategy, selector) {
+    return await this.findElOrElsWithProcessing(strategy, selector, false);
+  }
 
-commands.findElements = async function findElements (strategy, selector) {
-  return await this.findElOrElsWithProcessing(strategy, selector, true);
-};
+  async findElements (strategy, selector) {
+    return await this.findElOrElsWithProcessing(strategy, selector, true);
+  }
 
-commands.findElementFromElement = async function findElementFromElement (strategy, selector, elementId) {
-  return await this.findElOrElsWithProcessing(strategy, selector, false, elementId);
-};
+  async findElementFromElement (strategy, selector, elementId) {
+    return await this.findElOrElsWithProcessing(strategy, selector, false, elementId);
+  }
 
-commands.findElementsFromElement = async function findElementsFromElement (strategy, selector, elementId) {
-  return await this.findElOrElsWithProcessing(strategy, selector, true, elementId);
-};
+  async findElementsFromElement (strategy, selector, elementId) {
+    return await this.findElOrElsWithProcessing(strategy, selector, true, elementId);
+  }
 
-
-Object.assign(extensions, commands, helpers);
-export { commands, helpers };
-export default extensions;
+}

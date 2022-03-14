@@ -59,7 +59,3 @@ export { processCapabilities, isStandardCap, validateCaps };
 import * as ws from './express/websocket';
 const { DEFAULT_WS_PATHNAME_PREFIX } = ws;
 export { DEFAULT_WS_PATHNAME_PREFIX };
-
-/**
- * @typedef {import('@appium/base-driver').MethodMap} MethodMap
- */

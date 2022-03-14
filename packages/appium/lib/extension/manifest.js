@@ -523,13 +523,13 @@ export class Manifest {
  * Main class/constructor of third-party driver
  *
  * Referenced by {@link CommonData.mainClass}
- * @typedef { {driverName: string} & import('type-fest').Class<import('@appium/base-driver').Driver> & ExtClassStaticMembers } DriverClass
+ * @typedef { {driverName: string} & import('type-fest').Class<import('@appium/types').Driver> & ExtClassStaticMembers } DriverClass
  */
 
 /**
  * @typedef ExtClassStaticMembers
  * @property {UpdateServerFn} [updateServer]
- * @property {import('@appium/base-driver').MethodMap} [newMethodMap]
+ * @property {import('@appium/types').MethodMap} [newMethodMap]
  * @property {string} baseVersion
  */
 

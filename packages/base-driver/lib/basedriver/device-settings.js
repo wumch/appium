@@ -12,7 +12,7 @@ class DeviceSettings {
   /**
    *
    * @param {any} [defaultSettings]
-   * @param {import('@appium/base-driver').SettingsUpdater?} [onSettingsUpdate]
+   * @param {import('@appium/types').SettingsUpdater?} [onSettingsUpdate]
    */
   constructor (defaultSettings = {}, onSettingsUpdate = null) {
     this._settings = Object.assign({}, defaultSettings);

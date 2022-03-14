@@ -1,5 +1,4 @@
-/// <reference path="./idriver.d.ts"/>
-/// <reference path="./basedriver.d.ts"/>
+/// <reference path="../../types/index.d.ts"/>
 /* eslint-disable no-unused-vars */
 // @ts-check
 
@@ -9,7 +8,6 @@ import {
 import { fs, logger, node } from '@appium/support';
 import { PROTOCOLS, DEFAULT_BASE_PATH } from '../constants';
 import os from 'os';
-import commands from './commands';
 import * as helpers from './helpers';
 import DeviceSettings from './device-settings';
 import { desiredCapabilityConstraints } from './desired-caps';
@@ -18,6 +16,7 @@ import B from 'bluebird';
 import _ from 'lodash';
 import AsyncLock from 'async-lock';
 import { EventEmitter } from 'events';
+import { applyCommandMixins } from './commands';
 
 // for compat with running tests transpiled and in-place
 const {version: BASEDRIVER_VER} = fs.readPackageJsonFrom(__dirname);
@@ -44,10 +43,11 @@ class BaseDriver {
 
   /**
    *
-   * @param {AppiumDriver.Method} [opts]
+   * @param {DriverOpts} [opts]
    * @param {boolean} [shouldValidateCaps]
    */
-  constructor (opts = /** @type {import('@appium/base-driver').DriverOpts} */({}), shouldValidateCaps = true) {
+  constructor (opts = /** @type {DriverOpts} */({}), shouldValidateCaps = true) {
+
     // setup state
     this.sessionId = null;
     this.opts = opts;
@@ -104,7 +104,7 @@ class BaseDriver {
 
     // store event timings
     /**
-     * @type {import('@appium/base-driver').EventHistory}
+     * @type {import('@appium/types').EventHistory}
      */
     this._eventHistory = {
       commands: [] // commands get a special place
@@ -395,6 +395,10 @@ class BaseDriver {
     return res;
   }
 
+  /**
+   *
+   * @param {Error} err
+   */
   async startUnexpectedShutdown (err = new errors.NoSuchDriverError('The driver was unexpectedly shut down!')) {
     this.eventEmitter.emit(ON_UNEXPECTED_SHUTDOWN_EVENT, err); // allow others to listen for this
     this.shutdownUnexpectedly = true;
@@ -472,7 +476,7 @@ class BaseDriver {
    * @param {string} sessionId - the current sessionId (in case the driver runs
    * multiple session ids and requires it). This is not used in this method but
    * should be made available to overridden methods.
-   * @param {import('@appium/base-driver').HTTPMethod} method - HTTP method of the route
+   * @param {import('@appium/types').HTTPMethod} method - HTTP method of the route
    * @param {string} url - url of the route
    * @param {any} [body] - webdriver request body
    *
@@ -507,9 +511,15 @@ class BaseDriver {
   }
 }
 
-for (let [cmd, fn] of _.toPairs(commands)) {
-  BaseDriver.prototype[cmd] = fn;
-}
-
-export { BaseDriver };
+applyCommandMixins(BaseDriver);
+export {BaseDriver};
 export default BaseDriver;
+
+/**
+ * @typedef {import('@appium/types').DriverOpts} DriverOpts
+ * @typedef {import('@appium/types').HTTPMethod} HTTPMethod
+*/
+
+/**
+ * @typedef {import('./commands/session').SessionCommands & import('./commands/timeout').TimeoutCommands} Commands
+ */
