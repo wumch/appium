@@ -65,7 +65,7 @@ export class PluginConfig extends ExtensionConfig {
 
    /**
    * @param {string} pluginName
-   * @param {import('../../types/appium-manifest').ExtManifest<PluginType>} pluginData
+   * @param {import('appium/types').ExtManifest<PluginType>} pluginData
    * @returns {string}
    */
    extensionDesc (pluginName, {version}) {
@@ -101,13 +101,13 @@ export class PluginConfig extends ExtensionConfig {
 /**
  * @typedef PluginConfigOptions
  * @property {import('./extension-config').ExtensionLogFn} [logFn] - Optional logging function
- * @property {import('../../types/appium-manifest').PluginRecord} [extData] - Extension data
+ * @property {import('appium/types').PluginRecord} [extData] - Extension data
  */
 
 
 /**
- * @typedef {import('../../types/appium-manifest').PluginRecord} PluginRecord
- * @typedef {import('../../types').PluginType} PluginType
- * @typedef {import('../../types/external-manifest').ExtMetadata<PluginType>} PluginMetadata
+ * @typedef {import('appium/types').PluginRecord} PluginRecord
+ * @typedef {import('appium/types').PluginType} PluginType
+ * @typedef {import('appium/types').ExtMetadata<PluginType>} PluginMetadata
  * @typedef {import('./manifest').Manifest} Manifest
  */

@@ -17,64 +17,64 @@ describe('schema', function () {
   let sandbox;
 
   /**
-   * @type {import('@appium/types').Class<import('../../../lib/schema/schema').SchemaFinalizationError>}
+   * @type {import('@appium/types').Class<import('appium/lib/schema/schema').SchemaFinalizationError>}
    */
   let SchemaFinalizationError;
 
   /**
-   * @type {import('@appium/types').Class<import('../../../lib/schema/schema').SchemaUnknownSchemaError>}
+   * @type {import('@appium/types').Class<import('appium/lib/schema/schema').SchemaUnknownSchemaError>}
    */
   let SchemaUnknownSchemaError;
 
   /**
-   * @type {import('@appium/types').Class<import('../../../lib/schema/schema').SchemaUnsupportedSchemaError>}
+   * @type {import('@appium/types').Class<import('appium/lib/schema/schema').SchemaUnsupportedSchemaError>}
    */
   let SchemaUnsupportedSchemaError;
 
   /**
-   * @type {import('../../../lib/schema/schema').resetSchema}
+   * @type {import('appium/lib/schema/schema').resetSchema}
    */
   let resetSchema;
 
   /**
-   * @type {import('../../../lib/schema/schema').registerSchema}
+   * @type {import('appium/lib/schema/schema').registerSchema}
    */
   let registerSchema;
 
   /**
-   * @type {import('../../../lib/schema/schema').getSchema}
+   * @type {import('appium/lib/schema/schema').getSchema}
    */
   let getSchema;
 
   /**
-   * @type {import('../../../lib/schema/schema').finalizeSchema}
+   * @type {import('appium/lib/schema/schema').finalizeSchema}
    */
   let finalizeSchema;
 
   /**
-   * @type {import('../../../lib/schema/schema').getDefaultsForSchema}
+   * @type {import('appium/lib/schema/schema').getDefaultsForSchema}
    */
   let getDefaultsForSchema;
 
   /**
-   * @type {import('../../../lib/schema/schema').flattenSchema}
+   * @type {import('appium/lib/schema/schema').flattenSchema}
    */
   let flattenSchema;
 
   /**
-   * @type {import('../../../lib/schema/schema').isFinalized}
+   * @type {import('appium/lib/schema/schema').isFinalized}
    */
   let isFinalized;
 
   /**
-   * @type {import('../../../lib/schema/schema').validate}
+   * @type {import('appium/lib/schema/schema').validate}
    */
   let validate;
 
   let mocks;
 
   /**
-   * @type {import('@appium/types').Class<import('../../../lib/schema/schema').RoachHotelMap>}
+   * @type {import('@appium/types').Class<import('appium/lib/schema/schema').RoachHotelMap>}
    */
   let RoachHotelMap;
 

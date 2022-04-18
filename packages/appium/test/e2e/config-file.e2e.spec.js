@@ -211,7 +211,7 @@ describe('config file behavior', function () {
       });
 
       describe('with extensions', function () {
-        /** @type {import('../../lib/config-file').ReadConfigFileResult} */
+        /** @type {import('appium/lib/config-file').ReadConfigFileResult} */
         let result;
 
         beforeEach(function () {

@@ -42,7 +42,7 @@ const getExtensionArgs = _.memoize(function getExtensionArgs () {
       [EXT_SUBCOMMAND_RUN]: makeRunArgs(type),
     };
   }
-  return /** @type {Record<ExtensionType, Record<import('../../types/cli').CliExtensionSubcommand,ArgumentDefinitions>>} */(extensionArgs);
+  return /** @type {Record<ExtensionType, Record<import('appium/types').CliExtensionSubcommand,ArgumentDefinitions>>} */(extensionArgs);
 });
 
 /**

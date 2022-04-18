@@ -35,12 +35,12 @@ describe('config-file', function () {
 
   /**
    * `readConfigFile()` from an isolated `config-file` module
-   * @type {import('../../lib/config-file').readConfigFile}
+   * @type {import('appium/lib/config-file').readConfigFile}
    */
   let readConfigFile;
 
   /**
-   * @type {import('../../lib/config-file').formatErrors}
+   * @type {import('appium/lib/config-file').formatErrors}
    */
   let formatErrors;
 
@@ -116,7 +116,7 @@ describe('config-file', function () {
 
   describe('readConfigFile()', function () {
     /**
-     * @type {import('../../lib/config-file').ReadConfigFileResult}
+     * @type {import('appium/lib/config-file').ReadConfigFileResult}
      */
     let result;
 

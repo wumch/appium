@@ -552,14 +552,14 @@ export {ExtensionCommand};
  */
 
 /**
- * @typedef {import('../../types').ExtensionType} ExtensionType
- * @typedef {import('../../types').DriverType} DriverType
- * @typedef {import('../../types').PluginType} PluginType
+ * @typedef {import('appium/types').ExtensionType} ExtensionType
+ * @typedef {import('appium/types').DriverType} DriverType
+ * @typedef {import('appium/types').PluginType} PluginType
  */
 
 /**
  * @template {ExtensionType} ExtType
- * @typedef {import('../../types/appium-manifest').ExtRecord<ExtType>} ExtRecord
+ * @typedef {import('appium/types').ExtRecord<ExtType>} ExtRecord
  */
 
 /**
@@ -569,17 +569,17 @@ export {ExtensionCommand};
 
 /**
  * @template {ExtensionType} ExtType
- * @typedef {import('../../types/external-manifest').ExtMetadata<ExtType>} ExtMetadata
+ * @typedef {import('appium/types').ExtMetadata<ExtType>} ExtMetadata
  */
 
 /**
  * @template {ExtensionType} ExtType
- * @typedef {import('../../types/appium-manifest').ExtManifest<ExtType>} ExtManifest
+ * @typedef {import('appium/types').ExtManifest<ExtType>} ExtManifest
  */
 
 /**
  * @template {ExtensionType} ExtType
- * @typedef {import('../../types/external-manifest').ExtPackageJson<ExtType>} ExtPackageJson
+ * @typedef {import('appium/types').ExtPackageJson<ExtType>} ExtPackageJson
  */
 
 /**
@@ -591,7 +591,7 @@ export {ExtensionCommand};
 
 /**
  * Possible return value for {@linkcode ExtensionCommand.list}
- * @typedef {import('../../types/appium-manifest').InternalMetadata & ExtensionMetadata} InstalledExtensionListData
+ * @typedef {import('appium/types').InternalMetadata & ExtensionMetadata} InstalledExtensionListData
  */
 
 /**
@@ -668,7 +668,7 @@ export {ExtensionCommand};
  * Options for {@linkcode ExtensionCommand._install}
  * @typedef InstallArgs
  * @property {string} ext - the name or spec of an extension to install
- * @property {import('../../types/appium-manifest').InstallType} installType - how to install this extension. One of the INSTALL_TYPES
+ * @property {import('appium/types').InstallType} installType - how to install this extension. One of the INSTALL_TYPES
  * @property {string} [packageName] - for git/github installs, the extension node package name
  */
 

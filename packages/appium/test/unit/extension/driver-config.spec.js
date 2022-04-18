@@ -27,7 +27,7 @@ describe('DriverConfig', function () {
   let MockResolveFrom;
 
   /**
-   * @type {typeof import('../../../lib/extension/driver-config').DriverConfig}
+   * @type {typeof import('appium/lib/extension/driver-config').DriverConfig}
     */
   let DriverConfig;
 
@@ -297,7 +297,7 @@ describe('DriverConfig', function () {
        */
       let driverConfig;
 
-      /** @type {ExtDataWithSchema<DriverType>} */
+      /** @type {ExtManifestWithSchema<DriverType>} */
       let extData;
 
       const extName = 'stuff';
@@ -319,7 +319,6 @@ describe('DriverConfig', function () {
 
       describe('when the extension data is missing `schema`', function () {
         it('should throw', function () {
-          // @ts-expect-error
           delete extData.schema;
           expect(() =>
             driverConfig.readExtensionSchema(extName, extData),
@@ -349,11 +348,16 @@ describe('DriverConfig', function () {
 });
 
 /**
- * @typedef {import('../../../lib/extension/manifest').DriverType} DriverType
- * @typedef {import('../../../lib/extension/driver-config').DriverConfig} DriverConfig
+ * @typedef {import('appium/types').DriverType} DriverType
+ * @typedef {import('appium/lib/extension/driver-config').DriverConfig} DriverConfig
  */
 
 /**
- * @template {import('../../../lib/extension/manifest').ExtensionType} ExtType
- * @typedef {import('../../../lib/extension/manifest').ExtDataWithSchema<ExtType>} ExtDataWithSchema
+ * @template {import('appium/types').ExtensionType} ExtType
+ * @typedef {import('appium/types').ExtManifestWithSchema<ExtType>} ExtManifestWithSchema
+ */
+
+/**
+ * @template {import('appium/types').ExtensionType} ExtType
+ * @typedef {import('appium/types').ExtManifest<ExtType>} ExtManifest
  */

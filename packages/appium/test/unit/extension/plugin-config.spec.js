@@ -27,7 +27,7 @@ describe('PluginConfig', function () {
   let MockResolveFrom;
 
   /**
-   * @type {typeof import('../../../lib/extension/plugin-config').PluginConfig}
+   * @type {typeof import('appium/lib/extension/plugin-config').PluginConfig}
    */
   let PluginConfig;
 
@@ -347,11 +347,11 @@ describe('PluginConfig', function () {
 });
 
 /**
- * @typedef {import('../../../lib/extension/manifest').PluginType} PluginType
- * @typedef {import('../../../lib/extension/plugin-config').PluginConfig} PluginConfig
+ * @typedef {import('appium/lib/extension/manifest').PluginType} PluginType
+ * @typedef {import('appium/lib/extension/plugin-config').PluginConfig} PluginConfig
  */
 
 /**
- * @template {import('../../../lib/extension/manifest').ExtensionType} ExtType
- * @typedef {import('../../../lib/extension/manifest').ExtDataWithSchema<ExtType>} ExtDataWithSchema
+ * @template {import('appium/lib/extension/manifest').ExtensionType} ExtType
+ * @typedef {import('appium/lib/extension/manifest').ExtDataWithSchema<ExtType>} ExtDataWithSchema
  */

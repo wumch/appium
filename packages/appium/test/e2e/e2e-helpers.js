@@ -21,7 +21,7 @@ export const EXECUTABLE = path.join(PACKAGE_ROOT, 'build', 'lib', 'main.js');
  * Runs the `appium` executable with the given args.
  *
  * If the process exits with a nonzero code, the error will be a {@link AppiumRunError}.
- * @template {import('../../types/cli').CliExtensionSubcommand} ExtSubcommand
+ * @template {import('appium/types').CliExtensionSubcommand} ExtSubcommand
  * @param {string} appiumHome - Path to `APPIUM_HOME`
  * @param {CliExtArgs<ExtSubcommand> | CliArgs} args - Args, including commands
  * @param {import('teen_process').ExecOptions} [opts] - Options for `teen_process`
@@ -118,7 +118,7 @@ async function _runAppiumJson (appiumHome, args) {
  * i.e., add `@type {MyType}` tag.
  */
 export const runAppiumJson = /**
- * @template {import('../../types/cli').CliExtensionSubcommand} ExtSubcommand
+ * @template {import('appium/types').CliExtensionSubcommand} ExtSubcommand
  * @type {import('lodash').CurriedFunction2<string, CliExtArgs<ExtSubcommand>|CliArgs, Promise<unknown>>}
  */ (_.curry(_runAppiumJson));
 
@@ -130,7 +130,7 @@ export const runAppiumJson = /**
  * @param {string} pathToExtension
  */
 export async function installLocalExtension (appiumHome, type, pathToExtension) {
-  return /** @type {import('../../lib/extension/manifest').ExtRecord<ExtType>} */ (
+  return /** @type {import('appium/types').ExtRecord<ExtType>} */ (
     /** @type {unknown} */ (
       await runAppiumJson(appiumHome, [
         type,
@@ -178,9 +178,9 @@ export function formatAppiumArgErrorOutput (stderr) {
  */
 
 /**
- * @typedef {import('../../lib/extension/manifest').ExtensionType} ExtensionType
+ * @typedef {import('appium/types').ExtensionType} ExtensionType
  * @typedef {import('@appium/support/lib/npm').TeenProcessExecError} TeenProcessExecError
- * @typedef {import('../../lib/cli/extension-command').ExtensionListData} ExtensionListData
+ * @typedef {import('appium/lib/cli/extension-command').ExtensionListData} ExtensionListData
  */
 
 /**
@@ -194,12 +194,12 @@ export function formatAppiumArgErrorOutput (stderr) {
 
 /**
  * @template T
- * @typedef {import('../../lib/extension/manifest').ExtRecord<T>} ExtRecord
+ * @typedef {import('appium/types').ExtRecord<T>} ExtRecord
  */
 
 /**
  * @template ExtSubCommand
- * @typedef {[import('../../types/cli').CliSubcommand, ExtSubCommand, ...string[]]} CliExtArgs
+ * @typedef {[import('appium/types').CliSubcommand, ExtSubCommand, ...string[]]} CliExtArgs
  */
 
 /**
@@ -208,7 +208,7 @@ export function formatAppiumArgErrorOutput (stderr) {
 
 /**
  * @template [Result=unknown]
- * @template {import('../../types/cli').CliSubcommand} [ExtSubcommand=never]
+ * @template {import('appium/types').CliSubcommand} [ExtSubcommand=never]
  * @callback AppiumRunner
  * @param {string} appiumHome
  * @param {CliExtArgs<ExtSubcommand>|CliArgs} args
@@ -218,7 +218,7 @@ export function formatAppiumArgErrorOutput (stderr) {
 
 /**
  * @template [Result=unknown]
- * @template {import('../../types/cli').CliExtensionSubcommand} [ExtSubcommand=never]
+ * @template {import('appium/types').CliExtensionSubcommand} [ExtSubcommand=never]
  * @callback AppiumOptsRunner
  * @param {string} appiumHome
  * @param {CliExtArgs<ExtSubcommand>|CliArgs} args

@@ -5,12 +5,12 @@ import '@colors/colors';
 
 const REQ_DRIVER_FIELDS = ['driverName', 'automationName', 'platformNames', 'mainClass'];
 /**
- * @extends {ExtensionCommand<import('../extension/manifest').DriverType>}
+ * @extends {ExtensionCommand<DriverType>}
  */
 export default class DriverCommand extends ExtensionCommand {
 
   /**
-   * @param {DriverCommandOptions} opts
+   * @param {import('./extension-command').ExtensionCommandOptions<DriverType>} opts
    */
   constructor ({config, json}) {
     super({config, json});
@@ -54,7 +54,5 @@ export default class DriverCommand extends ExtensionCommand {
 }
 
 /**
- * @typedef DriverCommandOptions
- * @property {import('../extension/extension-config').ExtensionConfig<import('../extension/manifest').DriverType>} config
- * @property {boolean} json
+ * @typedef {import('appium/types').DriverType} DriverType
  */

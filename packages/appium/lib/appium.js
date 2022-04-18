@@ -374,7 +374,7 @@ class AppiumDriver extends DriverCore {
 
   /**
    *
-   * @param {import('../types/extension').DriverClass} InnerDriver
+   * @param {import('appium/types').DriverClass} InnerDriver
    * @returns {Promise<DriverData[]>}}
    */
   async curSessionDataForDriver (InnerDriver) { // eslint-disable-line require-await
@@ -744,8 +744,8 @@ export { AppiumDriver };
  * @typedef {import('@appium/types').ServerArgs} DriverOpts
  * @typedef {import('@appium/types').Constraints} Constraints
  * @typedef {import('@appium/types').AppiumServer} AppiumServer
- * @typedef {import('../types').ExtensionType} ExtensionType
- * @typedef {import('../types/extension').PluginClass} PluginClass
+ * @typedef {import('appium/types').ExtensionType} ExtensionType
+ * @typedef {import('appium/types').PluginClass} PluginClass
  * @typedef {import('./extension/driver-config').DriverConfig} DriverConfig
  */
 

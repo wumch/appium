@@ -5,7 +5,7 @@ import { rewiremock } from '../../helpers';
 const expect = chai.expect;
 
 describe('cli/schema-args', function () {
-  /** @type {import('../../../lib/schema/cli-args').toParserArgs} */
+  /** @type {import('appium/lib/schema/cli-args').toParserArgs} */
   let toParserArgs;
 
   /**

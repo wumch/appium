@@ -347,11 +347,11 @@ export { finalizeSchema, getSchema, validate } from './schema/schema';
 export { main, init, resolveAppiumHome };
 
 /**
- * @typedef {import('../types').DriverType} DriverType
- * @typedef {import('../types').PluginType} PluginType
- * @typedef {import('../types').DriverClass} DriverClass
- * @typedef {import('../types').PluginClass} PluginClass
- * @typedef {import('../types').WithServerSubcommand} WithServerSubcommand
+ * @typedef {import('appium/types').DriverType} DriverType
+ * @typedef {import('appium/types').PluginType} PluginType
+ * @typedef {import('appium/types').DriverClass} DriverClass
+ * @typedef {import('appium/types').PluginClass} PluginClass
+ * @typedef {import('appium/types').WithServerSubcommand} WithServerSubcommand
  */
 
 /**
@@ -362,7 +362,7 @@ export { main, init, resolveAppiumHome };
 /**
  * @typedef ServerInitData
  * @property {AppiumDriver} appiumDriver - The Appium driver
- * @property {import('../types').ParsedArgs} parsedArgs - The parsed arguments
+ * @property {import('appium/types').ParsedArgs} parsedArgs - The parsed arguments
  */
 
 /**
@@ -371,11 +371,11 @@ export { main, init, resolveAppiumHome };
 
 /**
  * @template [T=WithServerSubcommand]
- * @typedef {import('../types').Args<T>} Args
+ * @typedef {import('appium/types').Args<T>} Args
  */
 
 /**
  * @template [T=WithServerSubcommand]
- * @typedef {import('../types').ParsedArgs<T>} ParsedArgs
+ * @typedef {import('appium/types').ParsedArgs<T>} ParsedArgs
  */
 

@@ -268,7 +268,7 @@ describe('CLI behavior', function () {
             '--source',
             'npm',
           ]);
-          const {fake} = /** @type {Record<string,import('../../lib/cli/extension-command').InstalledExtensionListData>} */(await runList(['--updates']));
+          const {fake} = /** @type {Record<string,import('appium/lib/cli/extension-command').InstalledExtensionListData>} */(await runList(['--updates']));
           util.compareVersions(
             fake.updateVersion,
             '>',
@@ -559,13 +559,13 @@ describe('CLI behavior', function () {
 });
 
 /**
- * @typedef {import('../../lib/extension/manifest').ExtensionType} ExtensionType
- * @typedef {import('../../lib/extension/manifest').ManifestData} ManifestData
- * @typedef {import('../../lib/extension/manifest').DriverType} DriverType
- * @typedef {import('../../lib/extension/manifest').PluginType} PluginType
- * @typedef {import('../../lib/cli/extension-command').ExtensionListData} ExtensionListData
+ * @typedef {import('appium/types').ExtensionType} ExtensionType
+ * @typedef {import('appium/types').ManifestData} ManifestData
+ * @typedef {import('appium/types').DriverType} DriverType
+ * @typedef {import('appium/types').PluginType} PluginType
+ * @typedef {import('appium/lib/cli/extension-command').ExtensionListData} ExtensionListData
  * @typedef {import('./e2e-helpers').CliArgs} CliArgs
- * @typedef {import('../../types/cli').CliExtensionSubcommand} CliExtensionSubcommand
+ * @typedef {import('appium/types').CliExtensionSubcommand} CliExtensionSubcommand
  */
 
 /**
@@ -575,5 +575,5 @@ describe('CLI behavior', function () {
 
 /**
  * @template T
- * @typedef {import('../../lib/extension/manifest').ExtRecord<T>} ExtRecord
+ * @typedef {import('appium/types').ExtRecord<T>} ExtRecord
  */

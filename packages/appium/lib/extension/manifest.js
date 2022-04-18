@@ -444,12 +444,12 @@ export class Manifest {
 
 /**
  * Type of the string referring to a driver (typically as a key or type string)
- * @typedef {import('../../types').DriverType} DriverType
+ * @typedef {import('appium/types').DriverType} DriverType
  */
 
 /**
  * Type of the string referring to a plugin (typically as a key or type string)
- * @typedef {import('../../types').PluginType} PluginType
+ * @typedef {import('appium/types').PluginType} PluginType
  */
 
 /**
@@ -458,27 +458,27 @@ export class Manifest {
  */
 
 /**
- * @typedef {import('../../types/appium-manifest').ManifestData} ManifestData
- * @typedef {import('../../types/appium-manifest').InternalMetadata} InternalMetadata
+ * @typedef {import('appium/types').ManifestData} ManifestData
+ * @typedef {import('appium/types').InternalMetadata} InternalMetadata
  */
 
 /**
  * @template T
- * @typedef {import('../../types/external-manifest').ExtPackageJson<T>} ExtPackageJson
+ * @typedef {import('appium/types').ExtPackageJson<T>} ExtPackageJson
  */
 
 /**
  * @template T
- * @typedef {import('../../types/appium-manifest').ExtManifest<T>} ExtManifest
+ * @typedef {import('appium/types').ExtManifest<T>} ExtManifest
  */
 
 /**
  * @template T
- * @typedef {import('../../types/appium-manifest').ExtRecord<T>} ExtRecord
+ * @typedef {import('appium/types').ExtRecord<T>} ExtRecord
  */
 
 /**
  * Either `driver` or `plugin` rn
- * @typedef {import('../../types').ExtensionType} ExtensionType
+ * @typedef {import('appium/types').ExtensionType} ExtensionType
  */
 

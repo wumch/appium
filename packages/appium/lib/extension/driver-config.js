@@ -176,7 +176,7 @@ export class DriverConfig extends ExtensionConfig {
    * Given an automation name and platform name, find a suitable driver and return its extension data.
    * @param {string} matchAutomationName
    * @param {string} matchPlatformName
-   * @returns {ExtMetadata<DriverType> & import('../../types/appium-manifest').InternalMetadata & import('../../types/external-manifest').CommonMetadata}
+   * @returns {ExtMetadata<DriverType> & import('appium/types').InternalMetadata & import('appium/types').CommonMetadata}
    */
    _getDriverBySupport (matchAutomationName, matchPlatformName) {
      const drivers = this.installedExtensions;
@@ -211,35 +211,35 @@ export class DriverConfig extends ExtensionConfig {
 
 /**
  * @template T
- * @typedef {import('../../types').ExtMetadata<T>} ExtMetadata
+ * @typedef {import('appium/types').ExtMetadata<T>} ExtMetadata
  */
 
 /**
  * @template T
- * @typedef {import('../../types').ExtManifest<T>} ExtManifest
+ * @typedef {import('appium/types').ExtManifest<T>} ExtManifest
  */
 
 /**
- * @typedef {import('../../types').ManifestData} ManifestData
- * @typedef {import('../../types').DriverType} DriverType
+ * @typedef {import('appium/types').ManifestData} ManifestData
+ * @typedef {import('appium/types').DriverType} DriverType
  * @typedef {import('./manifest').Manifest} Manifest
  */
 
 /**
  * @template T
- * @typedef {import('../../types').ExtRecord<T>} ExtRecord
+ * @typedef {import('appium/types').ExtRecord<T>} ExtRecord
  */
 
 /**
  * @template T
- * @typedef {import('../../types').ExtName<T>} ExtName
+ * @typedef {import('appium/types').ExtName<T>} ExtName
  */
 
 
 /**
  * Return value of {@linkcode DriverConfig.findMatchingDriver}
  * @typedef MatchedDriver
- * @property {import('../../types/extension').DriverClass} driver
+ * @property {import('appium/types').DriverClass} driver
  * @property {string} version
  * @property {string} driverName
  */

@@ -15,7 +15,7 @@ describe('grid-register', function () {
   });
 
   describe('registerNode()', function () {
-    /** @type {import('../../lib/grid-register').default} */
+    /** @type {import('appium/lib/grid-register').default} */
     let registerNode;
     let mocks;
 
