@@ -174,9 +174,9 @@ class ExtensionCommand {
    * @param {InstallArgs} args
    * @return {Promise<ExtRecord<ExtType>>} map of all installed extension names to extension data
    */
-  async _install ({ext, installType, packageName}) {
+  async _install ({installSpec, installType, packageName}) {
+    /** @type {ExtensionFields<typeof this.type>} */
     let extData;
-    let installSpec = ext;
 
     if (packageName && [INSTALL_TYPE_LOCAL, INSTALL_TYPE_NPM].includes(installType)) {
       throw new Error(`When using --source=${installType}, cannot also use --package`);
@@ -191,12 +191,12 @@ class ExtensionCommand {
         throw new Error(`Github ${this.type} spec ${installSpec} appeared to be invalid; ` +
                         'it should be of the form <org>/<repo>');
       }
-      extData = await this.installViaNpm({ext: installSpec, pkgName: /** @type {string} */(packageName)});
+      extData = await this.installViaNpm({installSpec, pkgName: /** @type {string} */(packageName)});
     } else if (installType === INSTALL_TYPE_GIT) {
       // git urls can have '.git' at the end, but this is not necessary and would complicate the
       // way we download and name directories, so we can just remove it
       installSpec = installSpec.replace(/\.git$/, '');
-      extData = await this.installViaNpm({ext: installSpec, pkgName: /** @type {string} */(packageName)});
+      extData = await this.installViaNpm({installSpec, pkgName: /** @type {string} */(packageName)});
     } else {
       let pkgName, pkgVer;
       if (installType === INSTALL_TYPE_LOCAL) {
@@ -238,7 +238,7 @@ class ExtensionCommand {
         }
       }
 
-      extData = await this.installViaNpm({ext, pkgName, pkgVer});
+      extData = await this.installViaNpm({installSpec, pkgName, pkgVer});
     }
 
     const extName = extData[/** @type {string} */(`${this.type}Name`)];
@@ -269,17 +269,17 @@ class ExtensionCommand {
    *
    * @param {InstallViaNpmArgs} args
    */
-  async installViaNpm ({ext, pkgName, pkgVer}) {
+  async installViaNpm ({installSpec, pkgName, pkgVer}) {
     const npmSpec = `${pkgName}${pkgVer ? '@' + pkgVer : ''}`;
-    const specMsg = npmSpec === ext ? '' : ` using NPM install spec '${npmSpec}'`;
-    const msg = `Installing '${ext}'${specMsg}`;
+    const specMsg = npmSpec === installSpec ? '' : ` using NPM install spec '${npmSpec}'`;
+    const msg = `Installing '${installSpec}'${specMsg}`;
     try {
       const pkgJsonData = await spinWith(this.isJsonOutput, msg, async () => (
         await npm.installPackage(this.config.appiumHome, pkgName, {
           pkgVer
         })
       ));
-      return this.getExtensionFields(pkgJsonData);
+      return this.getExtensionFields(pkgJsonData, installSpec);
     } catch (err) {
       throw new Error(`Encountered an error when installing package: ${err.message}`);
     }
@@ -322,12 +322,17 @@ class ExtensionCommand {
   /**
    * For any package.json fields which a particular type of extension requires, validate the
    * presence and form of those fields on the package.json data, throwing an error if anything is
+
+  /**
+   * For any `package.json` fields which a particular type of extension requires, validate the
+   * presence and form of those fields on the `package.json` data, throwing an error if anything is
    * amiss.
    *
-   * @param {ExtMetadata<ExtType>} appiumPkgData - the data in the "appium" field of package.json for an extension
+   * @param {ExtMetadata<ExtType>} extMetadata - the data in the "appium" field of `package.json` for an extension
+   * @param {string} installSpec - Extension name/spec
    */
   // eslint-disable-next-line no-unused-vars
-  validateExtensionFields (appiumPkgData) {
+  validateExtensionFields (extMetadata, installSpec) {
     throw new Error('Must be implemented in final class');
   }
 
@@ -337,17 +342,17 @@ class ExtensionCommand {
    * @param {UninstallOpts} opts
    * @return {Promise<ExtRecord<ExtType>>} map of all installed extension names to extension data
    */
-  async _uninstall ({ext}) {
-    if (!this.config.isInstalled(ext)) {
-      throw new Error(`Can't uninstall ${this.type} '${ext}'; it is not installed`);
+  async _uninstall ({installSpec}) {
+    if (!this.config.isInstalled(installSpec)) {
+      throw new Error(`Can't uninstall ${this.type} '${installSpec}'; it is not installed`);
     }
-    const installPath = this.config.getInstallPath(ext);
+    const installPath = this.config.getInstallPath(installSpec);
     try {
       await fs.rimraf(installPath);
     } finally {
-      await this.config.removeExtension(ext);
+      await this.config.removeExtension(installSpec);
     }
-    log(this.isJsonOutput, `Successfully uninstalled ${this.type} '${ext}'`.green);
+    log(this.isJsonOutput, `Successfully uninstalled ${this.type} '${installSpec}'`.green);
     return this.config.installedExtensions;
   }
 
@@ -357,13 +362,13 @@ class ExtensionCommand {
    * @param {ExtensionUpdateOpts} updateSpec
    * @return {Promise<ExtensionUpdateResult>}
    */
-  async _update ({ext, unsafe}) {
-    const shouldUpdateAll = ext === UPDATE_ALL;
+  async _update ({installSpec, unsafe}) {
+    const shouldUpdateAll = installSpec === UPDATE_ALL;
     // if we're specifically requesting an update for an extension, make sure it's installed
-    if (!shouldUpdateAll && !this.config.isInstalled(ext)) {
-      throw new Error(`The ${this.type} '${ext}' was not installed, so can't be updated`);
+    if (!shouldUpdateAll && !this.config.isInstalled(installSpec)) {
+      throw new Error(`The ${this.type} '${installSpec}' was not installed, so can't be updated`);
     }
-    const extsToUpdate = shouldUpdateAll ? Object.keys(this.config.installedExtensions) : [ext];
+    const extsToUpdate = shouldUpdateAll ? Object.keys(this.config.installedExtensions) : [installSpec];
 
     // 'errors' will have ext names as keys and error objects as values
     /** @type {Record<string,Error>} */
@@ -458,16 +463,16 @@ class ExtensionCommand {
    * Actually update an extension installed by NPM, using the NPM cli. And update the installation
    * manifest.
    *
-   * @param {string} ext - name of extension to update
+   * @param {string} installSpec - name of extension to update
    * @param {string} version - version string identifier to update extension to
    * @returns {Promise<void>}
    */
-  async updateExtension (ext, version) {
-    const {pkgName} = this.config.installedExtensions[ext];
-    await fs.rimraf(this.config.getInstallPath(ext));
-    const extData = await this.installViaNpm({ext, pkgName, pkgVer: version});
+  async updateExtension (installSpec, version) {
+    const {pkgName} = this.config.installedExtensions[installSpec];
+    await fs.rimraf(this.config.getInstallPath(installSpec));
+    const extData = await this.installViaNpm({installSpec, pkgName, pkgVer: version});
     delete extData[/** @type {string} */(`${this.type}Name`)];
-    await this.config.updateExtension(ext, extData);
+    await this.config.updateExtension(installSpec, extData);
   }
 
   /**
@@ -481,33 +486,33 @@ class ExtensionCommand {
    * @param {RunOptions} opts
    * @return {Promise<RunOutput>}
    */
-  async _run ({ext, scriptName}) {
-    if (!_.has(this.config.installedExtensions, ext)) {
+  async _run ({installSpec, scriptName}) {
+    if (!_.has(this.config.installedExtensions, installSpec)) {
       throw new Error(`please install the ${this.type} first`);
     }
 
-    const extConfig = this.config.installedExtensions[ext];
+    const extConfig = this.config.installedExtensions[installSpec];
 
     // note: TS cannot understand that _.has() is a type guard
     if (!extConfig.scripts) {
-      throw new Error(`The ${this.type} named '${ext}' does not contain the ` +
+      throw new Error(`The ${this.type} named '${installSpec}' does not contain the ` +
                       `"scripts" field underneath the "appium" field in its package.json`);
     }
 
     const extScripts = extConfig.scripts;
 
     if (!_.isPlainObject(extScripts)) {
-      throw new Error(`The ${this.type} named '${ext}' "scripts" field must be a plain object`);
+      throw new Error(`The ${this.type} named '${installSpec}' "scripts" field must be a plain object`);
     }
 
     if (!_.has(extScripts, scriptName)) {
-      throw new Error(`The ${this.type} named '${ext}' does not support the script: '${scriptName}'`);
+      throw new Error(`The ${this.type} named '${installSpec}' does not support the script: '${scriptName}'`);
     }
 
     const runner = new SubProcess(process.execPath, [
       extScripts[scriptName]
     ], {
-      cwd: this.config.getInstallPath(ext)
+      cwd: this.config.getInstallPath(installSpec)
     });
 
     const output = new RingBuffer(50);
@@ -602,7 +607,7 @@ export {ExtensionCommand};
 /**
  * Options for {@linkcode ExtensionCommand._run}.
  * @typedef RunOptions
- * @property {string} ext - name of the extension to run a script from
+ * @property {string} installSpec - name of the extension to run a script from
  * @property {string} scriptName - name of the script to run
  */
 
@@ -617,7 +622,7 @@ export {ExtensionCommand};
 /**
  * Options for {@linkcode ExtensionCommand._update}.
  * @typedef ExtensionUpdateOpts
- * @property {string} ext - the name of the extension to update
+ * @property {string} installSpec - the name of the extension to update
  * @property {boolean} unsafe - if true, will perform unsafe updates past major revision boundaries
  */
 
@@ -638,7 +643,7 @@ export {ExtensionCommand};
 /**
  * Options for {@linkcode ExtensionCommand._uninstall}.
  * @typedef UninstallOpts
- * @property {string} ext - the name or spec of an extension to uninstall
+ * @property {string} installSpec - the name or spec of an extension to uninstall
  */
 
 /**
@@ -651,7 +656,7 @@ export {ExtensionCommand};
 /**
  * Options for {@linkcode ExtensionCommand.installViaNpm}
  * @typedef InstallViaNpmArgs
- * @property {string} ext - the name or spec of an extension to install
+ * @property {string} installSpec - the name or spec of an extension to install
  * @property {string} pkgName - the NPM package name of the extension
  * @property {string} [pkgVer] - the specific version of the NPM package
  */
@@ -667,7 +672,7 @@ export {ExtensionCommand};
 /**
  * Options for {@linkcode ExtensionCommand._install}
  * @typedef InstallArgs
- * @property {string} ext - the name or spec of an extension to install
+ * @property {string} installSpec - the name or spec of an extension to install
  * @property {import('appium/types').InstallType} installType - how to install this extension. One of the INSTALL_TYPES
  * @property {string} [packageName] - for git/github installs, the extension node package name
  */

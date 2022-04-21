@@ -4,6 +4,7 @@ import { KNOWN_DRIVERS } from '../constants';
 import '@colors/colors';
 
 const REQ_DRIVER_FIELDS = ['driverName', 'automationName', 'platformNames', 'mainClass'];
+
 /**
  * @extends {ExtensionCommand<DriverType>}
  */
@@ -18,19 +19,19 @@ export default class DriverCommand extends ExtensionCommand {
   }
 
   async install ({driver, installType, packageName}) {
-    return await super._install({ext: driver, installType, packageName});
+    return await super._install({installSpec: driver, installType, packageName});
   }
 
   async uninstall ({driver}) {
-    return await super._uninstall({ext: driver});
+    return await super._uninstall({installSpec: driver});
   }
 
   async update ({driver, unsafe}) {
-    return await super._update({ext: driver, unsafe});
+    return await super._update({installSpec: driver, unsafe});
   }
 
   async run ({driver, scriptName}) {
-    return await super._run({ext: driver, scriptName});
+    return await super._run({installSpec: driver, scriptName});
   }
 
   getPostInstallText ({extName, extData}) {
@@ -39,16 +40,24 @@ export default class DriverCommand extends ExtensionCommand {
            `- platformNames: ${JSON.stringify(extData.platformNames).green}`;
   }
 
-  validateExtensionFields (appiumPkgData) {
+  /**
+   * Validates fields in `appium` field of `driverMetadata`
+   *
+   * For any `package.json` fields which a driver requires, validate the type of
+   * those fields on the `package.json` data, throwing an error if anything is
+   * amiss.
+   * @param {import('appium/types').ExtMetadata<DriverType>} driverMetadata
+   * @param {string} installSpec
+   */
+  validateExtensionFields (driverMetadata, installSpec) {
     const missingFields = REQ_DRIVER_FIELDS.reduce((acc, field) => (
-      appiumPkgData[field] ? acc : [...acc, field]
+      driverMetadata[field] ? acc : [...acc, field]
     ), []);
 
     if (!_.isEmpty(missingFields)) {
-      throw new Error(`Installed driver did not expose correct fields for compability ` +
+      throw new Error(`Driver "${installSpec}" did not expose correct fields for compability ` +
                       `with Appium. Missing fields: ${JSON.stringify(missingFields)}`);
     }
-
   }
 
 }
