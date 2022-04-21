@@ -1,10 +1,10 @@
-
 import _ from 'lodash';
-import { USE_ALL_PLUGINS } from '../constants';
+import {USE_ALL_PLUGINS} from '../constants';
 import log from '../logger';
-import { DriverConfig } from './driver-config';
-import { Manifest } from './manifest';
-import { PluginConfig } from './plugin-config';
+import {DriverConfig} from './driver-config';
+import {Manifest} from './manifest';
+import {PluginConfig} from './plugin-config';
+import B from 'bluebird';
 
 /**
  * Loads extensions and creates `ExtensionConfig` instances.
@@ -17,15 +17,15 @@ import { PluginConfig } from './plugin-config';
  * @param {string} appiumHome
  * @returns {Promise<ExtensionConfigs>}
  */
-export async function loadExtensions (appiumHome) {
+export async function loadExtensions(appiumHome) {
   const manifest = Manifest.getInstance(appiumHome);
-  const {drivers, plugins} = await manifest.read();
+  await manifest.read();
   const driverConfig =
-    DriverConfig.getInstance(manifest) ??
-    DriverConfig.create(manifest, {extData: drivers});
+    DriverConfig.getInstance(manifest) ?? DriverConfig.create(manifest);
   const pluginConfig =
-    PluginConfig.getInstance(manifest) ??
-    PluginConfig.create(manifest, {extData: plugins});
+    PluginConfig.getInstance(manifest) ?? PluginConfig.create(manifest);
+
+  await B.all([driverConfig.validate(), pluginConfig.validate()]);
   return {driverConfig, pluginConfig};
 }
 
@@ -39,13 +39,13 @@ export async function loadExtensions (appiumHome) {
  * @param {string[]} usePlugins
  * @returns {import('appium/types').PluginClass[]}
  */
-export function getActivePlugins (pluginConfig, usePlugins = []) {
+export function getActivePlugins(pluginConfig, usePlugins = []) {
   return _.compact(
     Object.keys(pluginConfig.installedExtensions)
       .filter(
         (pluginName) =>
           _.includes(usePlugins, pluginName) ||
-          (usePlugins.length === 1 && usePlugins[0] === USE_ALL_PLUGINS),
+          (usePlugins.length === 1 && usePlugins[0] === USE_ALL_PLUGINS)
       )
       .map((pluginName) => {
         try {
@@ -57,11 +57,11 @@ export function getActivePlugins (pluginConfig, usePlugins = []) {
         } catch (err) {
           log.error(
             `Could not load plugin '${pluginName}', so it will not be available. Error ` +
-              `in loading the plugin was: ${err.message}`,
+              `in loading the plugin was: ${err.message}`
           );
           log.debug(err.stack);
         }
-      }),
+      })
   );
 }
 
@@ -73,12 +73,12 @@ export function getActivePlugins (pluginConfig, usePlugins = []) {
  * @param {import('./driver-config').DriverConfig} driverConfig - a driver extension config
  * @param {string[]} [useDrivers] - optional list of drivers to load
  */
-export function getActiveDrivers (driverConfig, useDrivers = []) {
+export function getActiveDrivers(driverConfig, useDrivers = []) {
   return _.compact(
     Object.keys(driverConfig.installedExtensions)
       .filter(
         (driverName) =>
-          _.includes(useDrivers, driverName) || useDrivers.length === 0,
+          _.includes(useDrivers, driverName) || useDrivers.length === 0
       )
       .map((driverName) => {
         try {
@@ -87,16 +87,16 @@ export function getActiveDrivers (driverConfig, useDrivers = []) {
         } catch (err) {
           log.error(
             `Could not load driver '${driverName}', so it will not be available. Error ` +
-              `in loading the driver was: ${err.message}`,
+              `in loading the driver was: ${err.message}`
           );
           log.debug(err.stack);
         }
-      }),
+      })
   );
 }
 
 /**
  * @typedef ExtensionConfigs
- * @property {DriverConfig} driverConfig
- * @property {PluginConfig} pluginConfig
+ * @property {import('./driver-config').DriverConfig} driverConfig
+ * @property {import('./plugin-config').PluginConfig} pluginConfig
  */

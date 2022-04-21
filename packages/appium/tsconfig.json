@@ -6,8 +6,10 @@
     "paths": {
       "@appium/support": ["../support"],
       "@appium/base-driver": ["../base-driver"],
+      "@appium/base-plugin": ["../base-plugin"],
       "@appium/types": ["../types"],
       "@appium/schema": ["../schema"],
+      "@appium/test-support": ["../test-support"],
       "appium": ["."]
     },
     "checkJs": true
@@ -15,8 +17,10 @@
   "include": ["lib", "types"],
   "references": [
     {"path": "../support"},
-    {"path": "../base-driver"},
     {"path": "../types"},
-    {"path": "../schema"}
+    {"path": "../schema"},
+    {"path": "../base-driver"},
+    {"path": "../base-plugin"},
+    {"path": "../test-support"}
   ]
 }

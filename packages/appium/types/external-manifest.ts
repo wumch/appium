@@ -2,9 +2,9 @@
  * These types describe information about external extensions and the contents of their `package.json` files
  */
 
-import type { SchemaObject } from 'ajv';
-import type { PackageJson, SetRequired } from 'type-fest';
-import { DriverType, ExtensionType, PluginType } from './index';
+import type {SchemaObject} from 'ajv';
+import type {PackageJson, SetRequired} from 'type-fest';
+import {DriverType, ExtensionType, PluginType} from '@appium/types';
 
 /**
  * This is what is allowed in the `appium.schema` prop of an extension's `package.json`.
@@ -50,9 +50,16 @@ export type ExtMetadata<ExtType extends ExtensionType> =
 
 /**
  * A `package.json` containing extension metadata.
- * Required fields are `name`, `version`, and `appium`.
+ * Must have the following properties:
+ * - `name`: the name of the extension
+ * - `version`: the version of the extension
+ * - `appium`: the metadata for the extension
+ * - `peerDependencies.appium`: the maximum compatible version of Appium
  */
 export type ExtPackageJson<ExtType extends ExtensionType> = SetRequired<
   PackageJson,
   'name' | 'version'
-> & {appium: ExtMetadata<ExtType>};
+> & {
+  appium: ExtMetadata<ExtType>;
+  peerDependencies: {appium: string; [key: string]: string};
+};
