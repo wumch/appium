@@ -1,6 +1,10 @@
 import _ from 'lodash';
-import { errors } from '@appium/base-driver';
-import { getImagesMatches, getImagesSimilarity, getImageOccurrence } from '@appium/opencv';
+import {errors} from 'appium/driver';
+import {
+  getImagesMatches,
+  getImagesSimilarity,
+  getImageOccurrence,
+} from '@appium/opencv';
 
 const MATCH_FEATURES_MODE = 'matchFeatures';
 const GET_SIMILARITY_MODE = 'getSimilarity';
@@ -19,17 +23,17 @@ const DEFAULT_MATCH_THRESHOLD = 0.4;
  * All image formats, that OpenCV library itself accepts, are supported.
  * @param {string} secondImage - Base64-encoded image file.
  * All image formats, that OpenCV library itself accepts, are supported.
- * @param {?Object} options [{}] - The content of this dictionary depends
+ * @param {object} [options] - The content of this dictionary depends
  * on the actual `mode` value. See the documentation on `@appium/support`
  * module for more details.
- * @returns {Object} The content of the resulting dictionary depends
+ * @returns {Promise<object|object[]>} The content of the resulting dictionary depends
  * on the actual `mode` and `options` values. See the documentation on
  * `@appium/support` module for more details.
  * @throws {Error} If required OpenCV modules are not installed or
  * if `mode` value is incorrect or if there was an unexpected issue while
  * matching the images.
  */
-async function compareImages (mode, firstImage, secondImage, options = {}) {
+async function compareImages(mode, firstImage, secondImage, options = {}) {
   const img1 = Buffer.from(firstImage, 'base64');
   const img2 = Buffer.from(secondImage, 'base64');
   let result = null;
@@ -53,8 +57,14 @@ async function compareImages (mode, firstImage, secondImage, options = {}) {
       }
       break;
     default:
-      throw new errors.InvalidArgumentError(`'${mode}' images comparison mode is unknown. ` +
-        `Only ${JSON.stringify([MATCH_FEATURES_MODE, GET_SIMILARITY_MODE, MATCH_TEMPLATE_MODE])} modes are supported.`);
+      throw new errors.InvalidArgumentError(
+        `'${mode}' images comparison mode is unknown. ` +
+          `Only ${JSON.stringify([
+            MATCH_FEATURES_MODE,
+            GET_SIMILARITY_MODE,
+            MATCH_TEMPLATE_MODE,
+          ])} modes are supported.`
+      );
   }
   return convertVisualizationToBase64(result);
 }
@@ -65,8 +75,8 @@ async function compareImages (mode, firstImage, secondImage, options = {}) {
  *
  * @param {OccurrenceResult} element - occurrence result
  *
-**/
-function convertVisualizationToBase64 (element) {
+ **/
+function convertVisualizationToBase64(element) {
   if (!_.isEmpty(element.visualization)) {
     element.visualization = element.visualization.toString('base64');
   }
@@ -74,8 +84,13 @@ function convertVisualizationToBase64 (element) {
   return element;
 }
 
-export { compareImages, DEFAULT_MATCH_THRESHOLD, MATCH_TEMPLATE_MODE, MATCH_FEATURES_MODE,
-  GET_SIMILARITY_MODE };
+export {
+  compareImages,
+  DEFAULT_MATCH_THRESHOLD,
+  MATCH_TEMPLATE_MODE,
+  MATCH_FEATURES_MODE,
+  GET_SIMILARITY_MODE,
+};
 
 /**
  * @typedef {import('@appium/opencv').OccurrenceResult} OccurrenceResult
