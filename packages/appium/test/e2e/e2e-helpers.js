@@ -8,7 +8,7 @@ import _ from 'lodash';
 import path from 'path';
 import { exec } from 'teen_process';
 import { PACKAGE_ROOT, resolveFixture } from '../helpers';
-import { fs } from '@appium/support';
+import { fs, logger } from '@appium/support';
 
 /**
  * Path to the (compiled) main script of the `appium` executable.
@@ -16,6 +16,8 @@ import { fs } from '@appium/support';
  * This means **you must build `appium` before running tests calling this code.**
  */
 export const EXECUTABLE = path.join(PACKAGE_ROOT, 'build', 'lib', 'main.js');
+
+const log = logger.getLogger('appium-e2e-helpers');
 
 /**
  * Runs the `appium` executable with the given args.
@@ -35,6 +37,7 @@ async function run (appiumHome, args, opts = {}) {
   };
   try {
     args = [...process.execArgv, '--', EXECUTABLE, ...args];
+    log.debug(`Running: ${process.execPath} ${args.join(' ')}`);
     return await exec(process.execPath, args, {
       cwd,
       env,
