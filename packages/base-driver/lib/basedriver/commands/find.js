@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable require-await */
-// @ts-check
 import {errors} from '../../protocol';
 
 /**
@@ -8,7 +7,7 @@ import {errors} from '../../protocol';
  * @param {EventBase} Base
  * @returns {FindBase}
  */
-export function FindMixin (Base) {
+export function FindMixin(Base) {
   /**
    * @implements {IFindCommands}
    */
@@ -17,7 +16,7 @@ export function FindMixin (Base) {
      *
      * @returns {Promise<Element>}
      */
-    async findElement (strategy, selector) {
+    async findElement(strategy, selector) {
       return await this.findElOrElsWithProcessing(strategy, selector, false);
     }
 
@@ -25,7 +24,7 @@ export function FindMixin (Base) {
      *
      * @returns {Promise<Element[]>}
      */
-    async findElements (strategy, selector) {
+    async findElements(strategy, selector) {
       return await this.findElOrElsWithProcessing(strategy, selector, true);
     }
 
@@ -33,12 +32,12 @@ export function FindMixin (Base) {
      *
      * @returns {Promise<Element>}
      */
-    async findElementFromElement (strategy, selector, elementId) {
+    async findElementFromElement(strategy, selector, elementId) {
       return await this.findElOrElsWithProcessing(
         strategy,
         selector,
         false,
-        elementId,
+        elementId
       );
     }
 
@@ -46,12 +45,12 @@ export function FindMixin (Base) {
      *
      * @returns {Promise<Element[]>}
      */
-    async findElementsFromElement (strategy, selector, elementId) {
+    async findElementsFromElement(strategy, selector, elementId) {
       return await this.findElOrElsWithProcessing(
         strategy,
         selector,
         true,
-        elementId,
+        elementId
       );
     }
     // Override the following function for your own driver, and the rest is taken
@@ -66,14 +65,14 @@ export function FindMixin (Base) {
      * @param {string} [context]
      * @returns {Promise<Mult extends true ? Element[] : Element>}
      */
-    async findElOrEls (strategy, selector, mult, context) {
+    async findElOrEls(strategy, selector, mult, context) {
       throw new errors.NotImplementedError('Not implemented yet for find.');
     }
 
     /**
      * @returns {Promise<string>}
      */
-    async getPageSource () {
+    async getPageSource() {
       throw new errors.NotImplementedError('Not implemented yet for find.');
     }
     /**
@@ -84,7 +83,7 @@ export function FindMixin (Base) {
      * @param {string} [context]
      * @returns {Promise<Mult extends true ? Element[] : Element>}
      */
-    async findElOrElsWithProcessing (strategy, selector, mult, context) {
+    async findElOrElsWithProcessing(strategy, selector, mult, context) {
       this.validateLocatorStrategy(strategy);
       try {
         return await this.findElOrEls(strategy, selector, mult, context);
@@ -92,10 +91,10 @@ export function FindMixin (Base) {
         if (this.opts.printPageSourceOnFindFailure) {
           const src = await this.getPageSource();
           this.log.debug(
-            `Error finding element${mult ? 's' : ''}: ${err.message}`,
+            `Error finding element${mult ? 's' : ''}: ${err.message}`
           );
           this.log.debug(
-            `Page source requested through 'printPageSourceOnFindFailure':`,
+            `Page source requested through 'printPageSourceOnFindFailure':`
           );
           this.log.debug(src);
         }

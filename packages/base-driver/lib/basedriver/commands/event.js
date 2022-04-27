@@ -1,12 +1,11 @@
 /* eslint-disable require-await */
-// @ts-check
 import _ from 'lodash';
 
 /**
  * @param {TimeoutBase} Base
  * @returns {EventBase}
  */
-export function EventMixin (Base) {
+export function EventMixin(Base) {
   /**
    * @implements {IEventCommands}
    */
@@ -18,7 +17,7 @@ export function EventMixin (Base) {
      * separation
      * @param {string} event - the event name
      */
-    async logCustomEvent (vendor, event) {
+    async logCustomEvent(vendor, event) {
       this.logEvent(`${vendor}:${event}`);
     }
 
@@ -28,7 +27,7 @@ export function EventMixin (Base) {
      * It returns all events if the type is not provided or empty string/array.
      * @returns {Promise<import('@appium/types').EventHistory|Record<string,number>>} - the event history log object
      */
-    async getLogEvents (type) {
+    async getLogEvents(type) {
       if (_.isEmpty(type)) {
         return this.eventHistory;
       }
@@ -43,7 +42,7 @@ export function EventMixin (Base) {
           }
           return acc;
         },
-        {},
+        {}
       );
     }
   }
