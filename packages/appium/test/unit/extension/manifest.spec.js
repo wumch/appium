@@ -650,7 +650,7 @@ describe('Manifest', function () {
  */
 
 /**
- * @typedef {import('appium/types').DriverType} DriverType
- * @typedef {import('appium/types').PluginType} PluginType
+ * @typedef {import('@appium/types').DriverType} DriverType
+ * @typedef {import('@appium/types').PluginType} PluginType
  * @typedef {import('appium/types').ManifestData} ManifestData
  */

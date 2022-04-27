@@ -3,6 +3,7 @@ import {
   Class,
   Driver,
   DriverType,
+  ExtensionType,
   PluginType,
 } from '@appium/types';
 

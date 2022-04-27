@@ -1,18 +1,18 @@
-import { CommonMetadata, ExtMetadata, SchemaMetadata } from './external-manifest';
-import { ExtensionType, DriverType, PluginType } from '.';
+import {CommonMetadata, ExtMetadata, SchemaMetadata} from './external-manifest';
+import {ExtensionType, DriverType, PluginType} from '@appium/types';
 
 export type InstallType = 'npm' | 'git' | 'local' | 'github';
 
 export interface InternalMetadata {
   /**
    * Package name of extension
-   * 
+   *
    * `name` from its `package.json`
    */
   pkgName: string;
   /**
    * Version of extension
-   * 
+   *
    * `version` from its `package.json`
    */
   version: string;
@@ -26,7 +26,7 @@ export interface InternalMetadata {
   installSpec: string;
   /**
    * Maximum version of Appium that this extension is compatible with.
-   * 
+   *
    * If `undefined`, we'll try anyway.
    */
   appiumVersion?: string;

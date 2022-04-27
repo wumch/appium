@@ -451,12 +451,12 @@ export class Manifest {
 
 /**
  * Type of the string referring to a driver (typically as a key or type string)
- * @typedef {import('appium/types').DriverType} DriverType
+ * @typedef {import('@appium/types').DriverType} DriverType
  */
 
 /**
  * Type of the string referring to a plugin (typically as a key or type string)
- * @typedef {import('appium/types').PluginType} PluginType
+ * @typedef {import('@appium/types').PluginType} PluginType
  */
 
 /**
@@ -486,6 +486,6 @@ export class Manifest {
 
 /**
  * Either `driver` or `plugin` rn
- * @typedef {import('appium/types').ExtensionType} ExtensionType
+ * @typedef {import('@appium/types').ExtensionType} ExtensionType
  */
 
