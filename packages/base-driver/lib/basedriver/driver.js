@@ -402,7 +402,13 @@ export class BaseDriverCore extends DriverCore {
  * This ensures that all of the mixins correctly implement the interface described in {@linkcode Driver}.
  * @implements {Driver}
  */
-class BaseDriver extends createBaseDriverClass(BaseDriverCore) {}
+class _BaseDriver extends createBaseDriverClass(BaseDriverCore) {};
+
+/**
+ * @type {import('@appium/types').DriverClass<Driver>}
+ */
+const BaseDriver = _BaseDriver;
+
 export {BaseDriver};
 export default BaseDriver;
 
@@ -426,16 +432,7 @@ export default BaseDriver;
  * This is used to extend {@linkcode BaseDriverCore} by the mixins and also external drivers.
  * @template [Proto={}]
  * @template [Static={}]
- * @typedef {import('@appium/types').Class<BaseDriverCore & Proto,BaseDriverStatic & Static>} BaseDriverBase
- */
-
-/**
- * Static properties of `BaseDriver` and optional properties for subclasses.
- * @template {ExternalDriver} [T=ExternalDriver]
- * @typedef BaseDriverStatic
- * @property {string} baseVersion
- * @property {UpdateServerCallback} [updateServer]
- * @property {import('@appium/types').MethodMap<T>} [newMethodMap]
+ * @typedef {import('@appium/types').Class<BaseDriverCore & Proto,import('@appium/types').DriverStatic & Static>} BaseDriverBase
  */
 
 /**

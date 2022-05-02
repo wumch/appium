@@ -9,6 +9,6 @@
     },
     "checkJs": true
   },
-  "include": ["./lib/**/*", "test/e2e/helpers.js"],
+  "include": ["lib"],
   "references": [{"path": "../support"}, {"path": "../types"}]
 }

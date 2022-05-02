@@ -83,7 +83,3 @@ const {DEFAULT_WS_PATHNAME_PREFIX} = ws;
 export {DEFAULT_WS_PATHNAME_PREFIX};
 
 export {PREFIXED_APPIUM_OPTS_CAP} from './basedriver/capabilities';
-
-/**
- * @typedef {import('@appium/base-driver/types').DriverClass} DriverClass
- */
