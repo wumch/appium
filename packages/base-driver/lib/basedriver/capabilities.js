@@ -35,11 +35,10 @@ function mergeCaps(primary = {}, secondary = {}) {
   return result;
 }
 
-// Validates caps against a set of constraints
 /**
- *
+ * Validates caps against a set of constraints
  * @param {Capabilities} caps
- * @param {Constraints} [constraints]
+ * @param {Constraints|JSONSchema} [constraints]
  * @param {ValidateCapsOpts} [opts]
  * @returns {Capabilities}
  */
@@ -354,9 +353,11 @@ export {
  * @typedef {import('@appium/types').W3CCapabilities} W3CCapabilities
  * @typedef {import('@appium/types').Constraints} Constraints
  * @typedef {import('@appium/types').Capabilities} Capabilities
+ * @typedef {import('json-schema').JSONSchema7} JSONSchema
  */
 
 /**
  * @typedef ValidateCapsOpts
  * @property {boolean} [skipPresenceConstraint] - if true, skip the presence constraint
+ * @property {boolean} [schema] - if `true`, then the constraints param is a JSON schema
  */

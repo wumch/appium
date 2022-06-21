@@ -14,7 +14,7 @@ import AsyncLock from 'async-lock';
 import {parseCapsForInnerDriver, pullSettings} from './utils';
 import {util, node, logger} from '@appium/support';
 import {getDefaultsForExtension} from './schema';
-import {DRIVER_TYPE, PLUGIN_TYPE} from './constants';
+import {DRIVER_TYPE} from './constants';
 
 /**
  * Invariant set of base constraints

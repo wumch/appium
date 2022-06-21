@@ -553,11 +553,12 @@ export class ExtensionConfig {
    * Intended to be called by corresponding instance methods of subclass.
    * @private
    * @template {ExtensionType} ExtType
+   * @template [T=unknown]
    * @param {string} appiumHome
    * @param {ExtType} extType
    * @param {ExtName<ExtType>} extName - Extension name (unique to its type)
    * @param {ExtManifestWithSchema<ExtType>} extManifest - Extension config
-   * @returns {import('ajv').SchemaObject|undefined}
+   * @returns {JSONSchema<T>|undefined}
    */
   static _readExtensionSchema(appiumHome, extType, extName, extManifest) {
     const {pkgName, schema: argSchemaPath} = extManifest;
@@ -574,6 +575,7 @@ export class ExtensionConfig {
       moduleObject = argSchemaPath;
     }
     // this sucks. default exports should be destroyed
+    /** @type {JSONSchema<T>} */
     const schema = moduleObject.__esModule ? moduleObject.default : moduleObject;
     registerSchema(extType, extName, schema);
     return schema;
@@ -593,9 +595,10 @@ export class ExtensionConfig {
   /**
    * If an extension provides a schema, this will load the schema and attempt to
    * register it with the schema registrar.
+   * @template [T=unknown]
    * @param {ExtName<ExtType>} extName - Name of extension
    * @param {ExtManifestWithSchema<ExtType>} extManifest - Extension data
-   * @returns {import('ajv').SchemaObject|undefined}
+   * @returns {JSONSchema<T>|undefined}
    */
   readExtensionSchema(extName, extManifest) {
     return ExtensionConfig._readExtensionSchema(
@@ -674,4 +677,9 @@ export {INSTALL_TYPE_NPM, INSTALL_TYPE_GIT, INSTALL_TYPE_LOCAL, INSTALL_TYPE_GIT
 /**
  * @typedef {import('../cli/extension-command').ExtensionListData} ExtensionListData
  * @typedef {import('../cli/extension-command').InstalledExtensionListData} InstalledExtensionListData
+ */
+
+/**
+ * @template T
+ * @typedef {import('appium/types').JSONSchema<T>} JSONSchema
  */

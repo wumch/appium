@@ -167,7 +167,7 @@ export function normalizeConfig(config) {
 
   /**
    * Returns `true` if the schema prop references an object, or if it's an object itself
-   * @param {import('ajv').SchemaObject|object} schema - Referencing schema object
+   * @param {any} schema - Referencing schema object
    */
   const isSchemaTypeObject = (schema) => Boolean(schema.properties);
 

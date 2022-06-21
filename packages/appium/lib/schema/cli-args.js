@@ -230,7 +230,7 @@ export function toParserArgs() {
 
 /**
  * A JSON 7 schema with our custom keywords.
- * @typedef {import('./keywords').AppiumJSONSchemaKeywords & import('json-schema').JSONSchema7} AppiumJSONSchema
+ * @typedef {import('ajv').JSONSchemaType<import('./keywords').AppiumJSONSchemaKeywords>} AppiumJSONSchema
  */
 
 /**

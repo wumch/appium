@@ -66,7 +66,7 @@ class AppiumSchema {
    * This data structure is used to ensure there are no naming conflicts. The schemas
    * are stored here in memory until the instance is _finalized_.
    * @private
-   * @type {Record<ExtensionType,Map<string,SchemaObject>>}
+   * @type {Record<ExtensionType,Map<string,JSONSchema>>}
    */
   _registeredSchemas = {[DRIVER_TYPE]: new Map(), [PLUGIN_TYPE]: new Map()};
 
@@ -90,7 +90,7 @@ class AppiumSchema {
    *
    * This does not include references, but rather the root schemas themselves.
    * @private
-   * @type {Record<string,StrictSchemaObject>?}
+   * @type {Record<string,JSONSchema>?}
    */
   _finalizedSchemas = null;
 
@@ -176,11 +176,11 @@ class AppiumSchema {
    * If the instance has already been finalized, this is a no-op.
    * @public
    * @throws {Error} If the schema is not valid
-   * @returns {Readonly<Record<string,StrictSchemaObject>>} Record of schema IDs to full schema objects
+   * @returns {Readonly<Record<string,JSONSchema>>} Record of schema IDs to full schema objects
    */
   finalize() {
     if (this.isFinalized()) {
-      return /** @type {NonNullable<typeof this._finalizedSchemas>} */ (this._finalizedSchemas);
+      return /** @type {NonNullable<JSONSchema>} */ (this._finalizedSchemas);
     }
 
     const ajv = this._ajv;
@@ -190,7 +190,7 @@ class AppiumSchema {
 
     /**
      *
-     * @param {SchemaObject} schema
+     * @param {JSONSchema} schema
      * @param {ExtensionType} [extType]
      * @param {string} [extName]
      */
@@ -210,7 +210,7 @@ class AppiumSchema {
     addArgSpecs(_.omit(baseSchema.properties.server.properties, [DRIVER_TYPE, PLUGIN_TYPE]));
 
     /**
-     * @type {Record<string,StrictSchemaObject>}
+     * @type {Record<string,JSONSchema>}
      */
     const finalizedSchemas = {};
 
@@ -218,7 +218,7 @@ class AppiumSchema {
       this._registeredSchemas,
       /**
        * @param {typeof baseSchema} baseSchema
-       * @param {Map<string,SchemaObject>} extensionSchemas
+       * @param {Map<string,JSONSchema>} extensionSchemas
        * @param {ExtensionType} extType
        */
       (baseSchema, extensionSchemas, extType) => {
@@ -233,7 +233,7 @@ class AppiumSchema {
           ajv.validateSchema(schema, true);
           addArgSpecs(schema.properties, extType, extName);
           ajv.addSchema(schema, $ref);
-          finalizedSchemas[$ref] = /** @type {StrictSchemaObject} */ (schema);
+          finalizedSchemas[$ref] = schema;
         });
         return baseSchema;
       },
@@ -301,9 +301,10 @@ class AppiumSchema {
    * This is "fail-fast" in that the schema will immediately be validated against JSON schema draft-07 _or_ whatever the value of the schema's `$schema` prop is.
    *
    * Does _not_ add the schema to the `ajv` instance (this is done by {@link AppiumSchema.finalize}).
+   * @template [T=unknown]
    * @param {ExtensionType} extType - Extension type
    * @param {string} extName - Unique extension name for `type`
-   * @param {SchemaObject} schema - Schema object
+   * @param {JSONSchema<T>} schema - Schema object
    * @throws {SchemaNameConflictError} If the schema is an invalid
    * @returns {void}
    */
@@ -431,7 +432,7 @@ class AppiumSchema {
   flatten() {
     const schema = this.getSchema();
 
-    /** @type { {properties: SchemaObject, prefix: string[]}[] } */
+    /** @type { {properties: JSONSchema, prefix: string[]}[] } */
     const stack = [{properties: schema.properties, prefix: []}];
     /** @type {FlattenedSchema} */
     const flattened = [];
@@ -488,10 +489,10 @@ class AppiumSchema {
    * @public
    * @param {string} [ref] - Schema ID
    * @throws If the schema has not yet been finalized
-   * @returns {SchemaObject}
+   * @returns {JSONSchema}
    */
   getSchema(ref = APPIUM_CONFIG_SCHEMA_ID) {
-    return /** @type {SchemaObject} */ (this._getValidator(ref).schema);
+    return /** @type {JSONSchema} */ (this._getValidator(ref).schema);
   }
 
   /**
@@ -537,7 +538,7 @@ class AppiumSchema {
   /**
    * Returns `true` if `schema` is a plain object with a non-true `$async` property.
    * @param {any} schema - Schema to check
-   * @returns {schema is SchemaObject}
+   * @returns {schema is JSONSchema}
    */
   static isSupportedSchemaType(schema) {
     return _.isPlainObject(schema) && schema.$async !== true;
@@ -675,11 +676,6 @@ export const {
 export const {isAllowedSchemaFileExtension} = AppiumSchema;
 
 /**
- * Appium only supports schemas that are plain objects; not arrays.
- * @typedef {import('ajv').SchemaObject & {[key: number]: never}} SchemaObject
- */
-
-/**
  * @typedef {import('../extension/manifest').ExtensionType} ExtensionType
  */
 
@@ -690,15 +686,10 @@ export const {isAllowedSchemaFileExtension} = AppiumSchema;
  */
 
 /**
- * A {@link SchemaObject} with `additionalProperties: false`
- * @typedef {SchemaObject & StrictProp} StrictSchemaObject
- */
-
-/**
  * A list of schemas associated with properties and their corresponding {@link ArgSpec} objects.
  *
  * Intermediate data structure used when converting the entire schema down to CLI arguments.
- * @typedef { {schema: SchemaObject, argSpec: ArgSpec}[] } FlattenedSchema
+ * @typedef { {schema: JSONSchema, argSpec: ArgSpec}[] } FlattenedSchema
  */
 
 /**
@@ -714,4 +705,9 @@ export const {isAllowedSchemaFileExtension} = AppiumSchema;
  * Helper type for the return value of {@link AppiumSchema.getDefaults}
  * @template {boolean|undefined} Flattened
  * @typedef {Record<string,Flattened extends true ? ArgSpecDefaultValue : ArgSpecDefaultValue | NestedArgSpecDefaultValue>} DefaultValues
+ */
+
+/**
+ * @template [T=unknown]
+ * @typedef {import('appium/types').JSONSchema<T>} JSONSchema
  */
